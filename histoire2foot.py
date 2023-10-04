@@ -134,7 +134,8 @@ def nb_buts_marques(match):
     Returns:
         int: le nombre de buts du match 
     """    
-    ...
+    buts = match[3] + match[4]
+    return buts
 
 
 def matchs_ville(liste_matchs, ville):
@@ -147,7 +148,11 @@ def matchs_ville(liste_matchs, ville):
     Returns:
         list: la liste des matchs qui se sont déroulé dans la ville ville    
     """
-    ...
+    liste_ville = []
+    for match in liste_matchs:
+        if match[7] == ville:
+            liste_ville.append(match)
+    return liste_ville
 
 
 def nombre_moyen_buts(liste_matchs, nom_competition):
@@ -160,7 +165,16 @@ def nombre_moyen_buts(liste_matchs, nom_competition):
     Returns:
         float: le nombre moyen de buts par match pour la compétition
     """
-    ...    
+    nb_competition = 0
+    total_buts = 0
+    moyenne = 0
+    for match in liste_matchs:
+        if match[5] == nom_competition:
+            nb_competition += 1
+            total_buts += nb_buts_marques(match)
+    if nb_competition != 0:
+        moyenne = total_buts / nb_competition
+    return moyenne
 
 
 def est_bien_trie(liste_matchs):
@@ -174,7 +188,9 @@ def est_bien_trie(liste_matchs):
     Returns:
         bool: True si la liste est bien triée et False sinon
     """    
-    ...
+    trier = True
+    if len(liste_matchs) > 1:
+        
 
 
 def fusionner_matchs(liste_matchs1, liste_matchs2):
