@@ -118,7 +118,11 @@ def victoire_a_domicile(match):
     Returns:
         bool: True si le match ne se déroule pas en terrain neutre et que l'équipe qui reçoit a gagné
     """    
-    ...
+    gagnant = equipe_gagnante(match)
+    res = False
+    if gagnant == match[7]:
+        res = True
+    return res
 
 
 def nb_buts_marques(match):
