@@ -150,7 +150,7 @@ def matchs_ville(liste_matchs, ville):
     """
     liste_ville = []
     for match in liste_matchs:
-        if match[7] == ville:
+        if match[6] == ville:
             liste_ville.append(match)
     return liste_ville
 
@@ -187,9 +187,14 @@ def est_bien_trie(liste_matchs):
 
     Returns:
         bool: True si la liste est bien triée et False sinon
-    """    
-    trier = True
-    if len(liste_matchs) > 1:
+    """
+    for indice in range(1, len(liste_matchs)):
+        if liste_matchs[indice-1][0] > liste_matchs[indice][0]:
+            return False
+        if liste_matchs[indice-1][0] == liste_matchs[indice][0]:
+            if liste_matchs[indice-1][1] > liste_matchs[indice][1]:
+                return False
+    return True
         
 
 
@@ -204,7 +209,27 @@ def fusionner_matchs(liste_matchs1, liste_matchs2):
     Returns:
         list: la liste triée sans doublon comportant tous les matchs de liste_matchs1 et liste_matchs2
     """ 
-    ...
+    indice1 = 0
+    indice2 = 0
+    liste_matchs = []
+    while indice1 < len(liste_matchs1) and indice2 < len(liste_matchs2):
+        if liste_matchs1[indice1][0] < liste_matchs2[indice2][0]:
+            if liste_matchs1[indice1] not in liste_matchs:
+                liste_matchs.append(liste_matchs1[indice1])
+            indice1 += 1
+        else:
+            if liste_matchs2[indice2] not in liste_matchs:
+                liste_matchs.append(liste_matchs2[indice2])
+            indice2 += 1
+    if indice1 == len(liste_matchs1):
+        for indice in range(indice2, len(liste_matchs2)):
+            if liste_matchs2[indice] not in liste_matchs:
+                liste_matchs.append(liste_matchs2[indice])
+    else:
+        for indice in range(indice1, len(liste_matchs1)):
+            if liste_matchs1[indice] not in liste_matchs:
+                liste_matchs.append(liste_matchs1[indice])
+    return liste_matchs
 
 
 def resultats_equipe(liste_matchs, equipe):
@@ -217,7 +242,25 @@ def resultats_equipe(liste_matchs, equipe):
     Returns:
         tuple: un triplet d'entiers contenant le nombre de victoires, nuls et défaites de l'équipe
     """    
-    ...
+    victoires = 0
+    nuls = 0
+    defaites = 0
+    for match in liste_matchs:
+        if match[1] == equipe:
+            if match[8]:
+                nuls += 1
+            elif victoire_a_domicile(match):
+                victoires += 1
+            else:
+                defaites += 1
+        elif match[2] == equipe:
+            if match[8]:
+                nuls += 1
+            elif match[4] > match[3]:
+                victoires += 1
+            else:
+                defaites += 1
+    return (victoires, nuls, defaites)
 
 
 def plus_gros_scores(liste_matchs):
