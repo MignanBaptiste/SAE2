@@ -99,7 +99,7 @@ def equipe_gagnante(match):
 
     Returns:
         str: le nom de l'équipe gagnante (ou None si match nul)
-    """    
+    """
     gagnant = None
     if not match[8]:
         if match[3] > match[4]:
@@ -117,7 +117,7 @@ def victoire_a_domicile(match):
 
     Returns:
         bool: True si le match ne se déroule pas en terrain neutre et que l'équipe qui reçoit a gagné
-    """    
+    """
     gagnant = equipe_gagnante(match)
     res = False
     if gagnant == match[7]:
@@ -133,7 +133,7 @@ def nb_buts_marques(match):
 
     Returns:
         int: le nombre de buts du match 
-    """    
+    """
     buts = match[3] + match[4]
     return buts
 
@@ -208,18 +208,20 @@ def fusionner_matchs(liste_matchs1, liste_matchs2):
 
     Returns:
         list: la liste triée sans doublon comportant tous les matchs de liste_matchs1 et liste_matchs2
-    """ 
+    """
     indice1 = 0
     indice2 = 0
     liste_matchs = []
-    while indice1 < len(liste_matchs1) and indice2 < len(liste_matchs2):
-        if liste_matchs1[indice1][0] < liste_matchs2[indice2][0]:
-            if liste_matchs1[indice1] not in liste_matchs:
-                liste_matchs.append(liste_matchs1[indice1])
+    while indice1 < len(liste_matchs1) and indice2 < len(liste_matchs2):  # Parcours les deux listes tant qu'une des deux listes n'est pas entièrement parcouru
+        if liste_matchs1[indice1][0] == liste_matchs2[indice2][0]:  # Permet de savoir si les deux matchs sont identiques
+            liste_matchs.append(liste_matchs1[indice1])  # Dans ce cas on ajoute la ligne et on incrémente de 1 les deux indides
+            indice1 += 1
+            indice2 += 2
+        elif liste_matchs1[indice1][0] < liste_matchs2[indice2][0]:  # Si le match de la liste 1 c'est dérouler avant le match de la liste 2
+            liste_matchs.append(liste_matchs1[indice1])
             indice1 += 1
         else:
-            if liste_matchs2[indice2] not in liste_matchs:
-                liste_matchs.append(liste_matchs2[indice2])
+            liste_matchs.append(liste_matchs2[indice2])
             indice2 += 1
     if indice1 == len(liste_matchs1):
         for indice in range(indice2, len(liste_matchs2)):
@@ -241,22 +243,22 @@ def resultats_equipe(liste_matchs, equipe):
 
     Returns:
         tuple: un triplet d'entiers contenant le nombre de victoires, nuls et défaites de l'équipe
-    """    
+    """
     victoires = 0
     nuls = 0
     defaites = 0
     for match in liste_matchs:
-        if match[1] == equipe:
-            if match[8]:
+        if match[1] == equipe:  # Vérifie que l'équipe donnée est l'equipe qui reçois
+            if match[8]:  # Vérifie si le match est nul
                 nuls += 1
-            elif victoire_a_domicile(match):
+            elif match[3] > match[4]:  # Vérifie que le nombre de buts de l'équipe qui reçois est supérieur à l'équipe accueilli
                 victoires += 1
             else:
                 defaites += 1
-        elif match[2] == equipe:
-            if match[8]:
+        elif match[2] == equipe:  # Vérifie que l'équipe donnée est l'equipe qui est accueilli
+            if match[8]:  # Vérifie si le match est nul
                 nuls += 1
-            elif match[4] > match[3]:
+            elif match[3] < match[4]:  # Vérifie que le nombre de buts de l'équipe qui est accueilli est supérieur à l'équipe reçois
                 victoires += 1
             else:
                 defaites += 1
@@ -271,8 +273,21 @@ def plus_gros_scores(liste_matchs):
 
     Returns:
         list: la liste des matchs avec le plus grand écart entre vainqueur et perdant
-    """    
-    ...
+    """
+    liste_gros_scores = []
+    gros_score = 0
+    for match in liste_matchs:
+        if not match[8]:  # Regarde si le match n'est pas nul car ces derniers n'ont pas d'intérêt dans la fonction
+            if match[3] > match[4]:  # Permet de connaître le score du match
+                score = match[3] - match[4]
+            else:
+                score = match[4] - match[3]
+            if score > gros_score:  # test si le score du match est plus gros que le plus gros score acutel
+                liste_gros_scores = [match]
+                gros_score = score
+            elif score == gros_score:  # Si le score du match actuel est égal au plus gros score, alors on l'ajoute à la liste des plus gros scores
+                liste_gros_scores.append(match)
+    return liste_gros_scores
 
 
 def liste_des_equipes(liste_matchs):
@@ -297,7 +312,7 @@ def premiere_victoire(liste_matchs, equipe):
 
     Returns:
         str: la date de la première victoire de l'equipe
-    """    
+    """
     ...
 
 
@@ -322,7 +337,7 @@ def charger_matchs(nom_fichier):
 
     Returns:
         list: la liste des matchs du fichier
-    """    
+    """
     ...
 
 
@@ -335,7 +350,7 @@ def sauver_matchs(liste_matchs,nom_fichier):
 
     Returns:
         None: cette fonction ne retourne rien
-    """    
+    """
     ...
 
 
