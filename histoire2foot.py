@@ -91,6 +91,47 @@ liste4 = [('1978-03-19', 'Argentina', 'Peru', 2, 1, 'Copa Ramón Castilla', 'Bue
 # Fonctions à implémenter dont les tests sont fournis
 
 
+def match_correcte(match):
+    """renvoie si le match rentré en paramètre respecte le format de match
+
+    Args:
+        match (tuple): tuple que l'on va tester s'il correspond au bon format
+
+    Returns:
+        bool: True si le match respect le format, False s'il ne le fait pas
+    """
+    if type(match) == tuple and len(match) == 9: #  Test si match est un tuple et qu'il contient 9 éléments
+        match_format = (str, str, str, int, int, str, str, str, bool) #  Tuple contentant le type aux quels doivent appartenir les éléments pour respecter le format
+        for indice in range(len(match)):
+            if type(match[indice]) != match_format[indice]: #  Test si les éléments sont du bon type
+                return False
+         #  Test si la date respecte le format de la date comme il doit être enregistrer
+        date = match[0]
+        if not (date[0:3].isint() and date[5:6].isint() and date[8:9].isint() and date[4] == "-" and date[7] == "-"):
+            return False
+         #  Test si l'occurence est correcte, si les nombres de buts sont égaux alors le match doit être nul
+        if match[3] == match[4]:
+            if not match[8]:
+                return False
+        return True #  Si tout est bon, on renvoie True
+    return False
+
+
+def liste_matchs_correcte(liste_matchs):
+    """Permet de tester si une liste de matchs respecte le format de match utiliser
+
+    Args:
+        liste_matchs (list): liste de matchs
+
+    Returns:
+        bool: True si la liste de match respecte le format, False si ce n'est pas le cas
+    """
+    for match in liste_matchs: #  Test pour chaque élément de liste_matchs
+        if not match_correcte(match): #  Si un match ne respecte pas le format, on renvoie False
+            return False
+    return True
+
+
 def equipe_gagnante(match):
     """retourne le nom de l'équipe qui a gagné le match. Si c'est un match nul on retourne None
 
@@ -101,11 +142,12 @@ def equipe_gagnante(match):
         str: le nom de l'équipe gagnante (ou None si match nul)
     """
     gagnant = None
-    if not match[8]:
-        if match[3] > match[4]:
-            gagnant = match[1]
-        else:
-            gagnant = match[2]
+    if match_correcte(match):
+        if not match[8]:
+            if match[3] > match[4]:
+                gagnant = match[1]
+            else:
+                gagnant = match[2]
     return gagnant
 
 
@@ -120,8 +162,9 @@ def victoire_a_domicile(match):
     """
     gagnant = equipe_gagnante(match)
     res = False
-    if gagnant == match[7]:
-        res = True
+    if match_correcte(match):
+        if gagnant == match[7]:
+            res = True
     return res
 
 
@@ -132,9 +175,11 @@ def nb_buts_marques(match):
         match (tuple): un match
 
     Returns:
-        int: le nombre de buts du match 
+        int: le nombre de buts du match, None si le match ne respecte pas le format de match
     """
-    buts = match[3] + match[4]
+    buts = None
+    if match_correcte(match):
+        buts = match[3] + match[4]
     return buts
 
 
@@ -150,8 +195,9 @@ def matchs_ville(liste_matchs, ville):
     """
     liste_ville = []
     for match in liste_matchs:
-        if match[6] == ville:
-            liste_ville.append(match)
+        if match_correcte(match):
+            if match[6] == ville:
+                liste_ville.append(match)
     return liste_ville
 
 
@@ -169,9 +215,10 @@ def nombre_moyen_buts(liste_matchs, nom_competition):
     total_buts = 0
     moyenne = 0
     for match in liste_matchs:
-        if match[5] == nom_competition:
-            nb_competition += 1
-            total_buts += nb_buts_marques(match)
+        if match_correcte(match):
+            if match[5] == nom_competition:
+                nb_competition += 1
+                total_buts += nb_buts_marques(match)
     if nb_competition != 0:
         moyenne = total_buts / nb_competition
     return moyenne
@@ -188,14 +235,15 @@ def est_bien_trie(liste_matchs):
     Returns:
         bool: True si la liste est bien triée et False sinon
     """
-    for indice in range(1, len(liste_matchs)):
-        if liste_matchs[indice-1][0] > liste_matchs[indice][0]:
-            return False
-        if liste_matchs[indice-1][0] == liste_matchs[indice][0]:
-            if liste_matchs[indice-1][1] > liste_matchs[indice][1]:
+    if liste_matchs_correcte(liste_matchs):
+        for indice in range(1, len(liste_matchs)):
+            if liste_matchs[indice-1][0] > liste_matchs[indice][0]:
                 return False
-    return True
-        
+            if liste_matchs[indice-1][0] == liste_matchs[indice][0]:
+                if liste_matchs[indice-1][1] > liste_matchs[indice][1]:
+                    return False
+        return True
+    return False
 
 
 def fusionner_matchs(liste_matchs1, liste_matchs2):
@@ -212,25 +260,26 @@ def fusionner_matchs(liste_matchs1, liste_matchs2):
     indice1 = 0
     indice2 = 0
     liste_matchs = []
-    while indice1 < len(liste_matchs1) and indice2 < len(liste_matchs2):  # Parcours les deux listes tant qu'une des deux listes n'est pas entièrement parcouru
-        if liste_matchs1[indice1][0] == liste_matchs2[indice2][0]:  # Permet de savoir si les deux matchs sont identiques
-            liste_matchs.append(liste_matchs1[indice1])  # Dans ce cas on ajoute la ligne et on incrémente de 1 les deux indides
-            indice1 += 1
-            indice2 += 2
-        elif liste_matchs1[indice1][0] < liste_matchs2[indice2][0]:  # Si le match de la liste 1 c'est dérouler avant le match de la liste 2
-            liste_matchs.append(liste_matchs1[indice1])
-            indice1 += 1
+    if liste_matchs_correcte(liste_matchs):
+        while indice1 < len(liste_matchs1) and indice2 < len(liste_matchs2):  # Parcours les deux listes tant qu'une des deux listes n'est pas entièrement parcouru
+            if liste_matchs1[indice1][0] == liste_matchs2[indice2][0]:  # Permet de savoir si les deux matchs sont identiques
+                liste_matchs.append(liste_matchs1[indice1])  # Dans ce cas on ajoute la ligne et on incrémente de 1 les deux indides
+                indice1 += 1
+                indice2 += 2
+            elif liste_matchs1[indice1][0] < liste_matchs2[indice2][0]:  # Si le match de la liste 1 c'est dérouler avant le match de la liste 2
+                liste_matchs.append(liste_matchs1[indice1])
+                indice1 += 1
+            else:
+                liste_matchs.append(liste_matchs2[indice2])
+                indice2 += 1
+        if indice1 == len(liste_matchs1):
+            for indice in range(indice2, len(liste_matchs2)):
+                if liste_matchs2[indice] not in liste_matchs:
+                    liste_matchs.append(liste_matchs2[indice])
         else:
-            liste_matchs.append(liste_matchs2[indice2])
-            indice2 += 1
-    if indice1 == len(liste_matchs1):
-        for indice in range(indice2, len(liste_matchs2)):
-            if liste_matchs2[indice] not in liste_matchs:
-                liste_matchs.append(liste_matchs2[indice])
-    else:
-        for indice in range(indice1, len(liste_matchs1)):
-            if liste_matchs1[indice] not in liste_matchs:
-                liste_matchs.append(liste_matchs1[indice])
+            for indice in range(indice1, len(liste_matchs1)):
+                if liste_matchs1[indice] not in liste_matchs:
+                    liste_matchs.append(liste_matchs1[indice])
     return liste_matchs
 
 
@@ -248,20 +297,21 @@ def resultats_equipe(liste_matchs, equipe):
     nuls = 0
     defaites = 0
     for match in liste_matchs:
-        if match[1] == equipe:  # Vérifie que l'équipe donnée est l'equipe qui reçois
-            if match[8]:  # Vérifie si le match est nul
-                nuls += 1
-            elif match[3] > match[4]:  # Vérifie que le nombre de buts de l'équipe qui reçois est supérieur à l'équipe accueilli
-                victoires += 1
-            else:
-                defaites += 1
-        elif match[2] == equipe:  # Vérifie que l'équipe donnée est l'equipe qui est accueilli
-            if match[8]:  # Vérifie si le match est nul
-                nuls += 1
-            elif match[3] < match[4]:  # Vérifie que le nombre de buts de l'équipe qui est accueilli est supérieur à l'équipe reçois
-                victoires += 1
-            else:
-                defaites += 1
+        if match_correcte(match):
+            if match[1] == equipe:  # Vérifie que l'équipe donnée est l'equipe qui reçois
+                if match[8]:  # Vérifie si le match est nul
+                    nuls += 1
+                elif match[3] > match[4]:  # Vérifie que le nombre de buts de l'équipe qui reçois est supérieur à l'équipe accueilli
+                    victoires += 1
+                else:
+                    defaites += 1
+            elif match[2] == equipe:  # Vérifie que l'équipe donnée est l'equipe qui est accueilli
+                if match[8]:  # Vérifie si le match est nul
+                    nuls += 1
+                elif match[3] < match[4]:  # Vérifie que le nombre de buts de l'équipe qui est accueilli est supérieur à l'équipe reçois
+                    victoires += 1
+                else:
+                    defaites += 1
     return (victoires, nuls, defaites)
 
 
@@ -277,16 +327,17 @@ def plus_gros_scores(liste_matchs):
     liste_gros_scores = []
     gros_score = 0
     for match in liste_matchs:
-        if not match[8]:  # Regarde si le match n'est pas nul car ces derniers n'ont pas d'intérêt dans la fonction
-            if match[3] > match[4]:  # Permet de connaître le score du match
-                score = match[3] - match[4]
-            else:
-                score = match[4] - match[3]
-            if score > gros_score:  # test si le score du match est plus gros que le plus gros score acutel
-                liste_gros_scores = [match]
-                gros_score = score
-            elif score == gros_score:  # Si le score du match actuel est égal au plus gros score, alors on l'ajoute à la liste des plus gros scores
-                liste_gros_scores.append(match)
+        if match_correcte(match):
+            if not match[8]:  # Regarde si le match n'est pas nul car ces derniers n'ont pas d'intérêt dans la fonction
+                if match[3] > match[4]:  # Permet de connaître le score du match
+                    score = match[3] - match[4]
+                else:
+                    score = match[4] - match[3]
+                if score > gros_score:  # test si le score du match est plus gros que le plus gros score acutel
+                    liste_gros_scores = [match]
+                    gros_score = score
+                elif score == gros_score:  # Si le score du match actuel est égal au plus gros score, alors on l'ajoute à la liste des plus gros scores
+                    liste_gros_scores.append(match)
     return liste_gros_scores
 
 
