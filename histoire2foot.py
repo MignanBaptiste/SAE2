@@ -107,8 +107,9 @@ def match_correcte(match):
                 return False
          #  Test si la date respecte le format de la date comme il doit être enregistrer
         date = match[0]
-        if not (date[0:3].isint() and date[5:6].isint() and date[8:9].isint() and date[4] == "-" and date[7] == "-"):
-            return False
+        if not (date[4] == "-" and date[7] == "-"):
+            if not  (date[0:3] in "0123456789" and date[5:6] in "0123456789" and date[8:9] in "0123456789"):
+                return False
          #  Test si l'occurence est correcte, si les nombres de buts sont égaux alors le match doit être nul
         if match[3] == match[4]:
             if not match[8]:
@@ -149,6 +150,11 @@ def equipe_gagnante(match):
             else:
                 gagnant = match[2]
     return gagnant
+
+
+assert equipe_gagnante(match1) is None
+assert equipe_gagnante(match2) == 'France'
+assert equipe_gagnante(match3) == 'Brazil'
 
 
 def victoire_a_domicile(match):
