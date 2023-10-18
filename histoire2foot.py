@@ -110,9 +110,12 @@ def match_correcte(match):
         if not (date[4] == "-" and date[7] == "-"):
             if not  (date[0:3] in "0123456789" and date[5:6] in "0123456789" and date[8:9] in "0123456789"):
                 return False
-         #  Test si l'occurence est correcte, si les nombres de buts sont égaux alors le match doit être nul
-        if match[3] == match[4]:
-            if not match[8]:
+         #  Test si l'occurence est correcte, si le match se passe réelement en terrain neutre
+        if match[8]:
+            if match[7] in match[1:2]:
+                return False
+        else:
+            if not match[7] in match[1:2]:
                 return False
         return True #  Si tout est bon, on renvoie True
     return False
@@ -144,7 +147,7 @@ def equipe_gagnante(match):
     """
     gagnant = None
     if match_correcte(match):
-        if not match[8]:
+        if match[3] != match[4]:
             if match[3] > match[4]:
                 gagnant = match[1]
             else:
@@ -164,14 +167,11 @@ def victoire_a_domicile(match):
         match (tuple): un match
 
     Returns:
-        bool: True si le match ne se déroule pas en terrain neutre et que l'équipe qui reçoit a gagné
+        bool: True si l'équipe qui gagne gagne à domicile, False si ce n'est pas le cas
     """
-    gagnant = equipe_gagnante(match)
-    res = False
     if match_correcte(match):
-        if gagnant == match[7]:
-            res = True
-    return res
+        return equipe_gagnante(match) == match[7]
+    return False
 
 
 def nb_buts_marques(match):
@@ -184,7 +184,7 @@ def nb_buts_marques(match):
         int: le nombre de buts du match, None si le match ne respecte pas le format de match
     """
     buts = None
-    if match_correcte(match):
+    if match_correcte(match): #  Regarde si le match est correctement implémenté, s'il ne l'est pas, on le passe
         buts = match[3] + match[4]
     return buts
 
@@ -201,7 +201,7 @@ def matchs_ville(liste_matchs, ville):
     """
     liste_ville = []
     for match in liste_matchs:
-        if match_correcte(match):
+        if match_correcte(match): #  Regarde si le match est correctement implémenté, s'il ne l'est pas, on le passe
             if match[6] == ville:
                 liste_ville.append(match)
     return liste_ville
@@ -221,7 +221,7 @@ def nombre_moyen_buts(liste_matchs, nom_competition):
     total_buts = 0
     moyenne = 0
     for match in liste_matchs:
-        if match_correcte(match):
+        if match_correcte(match): #  Regarde si le match est correctement implémenté, s'il ne l'est pas, on le passe
             if match[5] == nom_competition:
                 nb_competition += 1
                 total_buts += nb_buts_marques(match)
@@ -241,7 +241,7 @@ def est_bien_trie(liste_matchs):
     Returns:
         bool: True si la liste est bien triée et False sinon
     """
-    if liste_matchs_correcte(liste_matchs):
+    if liste_matchs_correcte(liste_matchs): #  Regarde si la liste de match est correctement implémenté, si tout les matchs sont correctes, sinon on renvoie False
         for indice in range(1, len(liste_matchs)):
             if liste_matchs[indice-1][0] > liste_matchs[indice][0]:
                 return False
@@ -266,7 +266,7 @@ def fusionner_matchs(liste_matchs1, liste_matchs2):
     indice1 = 0
     indice2 = 0
     liste_matchs = []
-    if liste_matchs_correcte(liste_matchs):
+    if liste_matchs_correcte(liste_matchs1) and liste_matchs_correcte(liste_matchs2): #  On regarde si les deux listes de matchs sont correctement implémenté
         while indice1 < len(liste_matchs1) and indice2 < len(liste_matchs2):  # Parcours les deux listes tant qu'une des deux listes n'est pas entièrement parcouru
             if liste_matchs1[indice1][0] == liste_matchs2[indice2][0]:  # Permet de savoir si les deux matchs sont identiques
                 liste_matchs.append(liste_matchs1[indice1])  # Dans ce cas on ajoute la ligne et on incrémente de 1 les deux indides
@@ -303,7 +303,7 @@ def resultats_equipe(liste_matchs, equipe):
     nuls = 0
     defaites = 0
     for match in liste_matchs:
-        if match_correcte(match):
+        if match_correcte(match): #  Regarde si le match est correctement implémenté, s'il ne l'est pas, on le passe
             if match[1] == equipe:  # Vérifie que l'équipe donnée est l'equipe qui reçois
                 if match[8]:  # Vérifie si le match est nul
                     nuls += 1
@@ -357,7 +357,13 @@ def liste_des_equipes(liste_matchs):
     Returns:
         list: une liste de str contenant le noms des équipes ayant jouer des matchs
     """
-    ...
+    liste_equipes = []
+    for match in liste_matchs:
+        if match[1] not in liste_equipes:
+            liste_equipes.append(match[1])
+        if match[2] not in liste_equipes:
+            liste_equipes.append(match[2])
+    return liste_equipes
 
 
 def premiere_victoire(liste_matchs, equipe):
@@ -368,9 +374,31 @@ def premiere_victoire(liste_matchs, equipe):
         equipe (str): le nom d'une équipe (pays)
 
     Returns:
-        str: la date de la première victoire de l'equipe
+        str: la date de la première victoire de l'equipe, None si l'équipe n'a gagné aucun match
     """
-    ...
+    if est_bien_trie(liste_matchs):
+        for match in liste_matchs:
+            gagnant = equipe_gagnante(match)
+            if gagnant == equipe:
+                return match[0]
+    return None
+
+
+def matchs_equipe(liste_matchs, equipe):
+    """renvoie la liste des matchs auquels une équipe à participer
+
+    Args:
+        liste_matchs (list): liste de matchs
+        equipe (str): nom d'une équipe
+
+    Returns:
+        list: liste de matchs auquels l'équipe à participer
+    """    
+    liste_matchs_equipe = []
+    for match in liste_matchs:
+        if match[1] == equipe or match[2] == equipe:
+            liste_matchs_equipe.append(match)
+    return liste_matchs_equipe
 
 
 def nb_matchs_sans_defaites(liste_matchs, equipe):
@@ -383,7 +411,22 @@ def nb_matchs_sans_defaites(liste_matchs, equipe):
     Returns:
         int: le plus grand nombre de matchs consécutifs sans défaite du pays nom_pays
     """
-    ...
+    liste_matchs_equipe = matchs_equipe(liste_matchs, equipe)
+    victory_streak = 0
+    best_victory_streak = 0
+    for match in liste_matchs_equipe:
+        gagnant = equipe_gagnante(match)
+        if gagnant == equipe or gagnant is None:
+            victory_streak += 1
+        else:
+            if victory_streak > best_victory_streak:
+                best_victory_streak = victory_streak
+                victory_streak = 0
+    if victory_streak > best_victory_streak:
+        best_victory_streak = victory_streak
+    return best_victory_streak
+
+
 
 
 def charger_matchs(nom_fichier):
@@ -423,7 +466,8 @@ def plus_de_victoires_que_defaites(liste_matchs, equipe):
     Returns:
         bool: True si l'equipe a obtenu plus de victoires que de défaites
     """
-    ...
+    resultats = resultats_equipe(liste_matchs, equipe)
+    return resultats[0] > resultats[2]
 
 
 def matchs_spectaculaires(liste_matchs):
@@ -436,7 +480,13 @@ def matchs_spectaculaires(liste_matchs):
     Returns:
         list: la liste des matchs les plus spectaculaires
     """
-    ...
+    liste_spectaculaires = []
+    nb_buts_max = 0
+    for match in liste_matchs:
+        nb_buts = nb_buts_marques(match)
+        if nb_buts > nb_buts_max:
+            liste_spectaculaires = [match]
+            nb_buts_max = nb_buts
 
 
 def meilleures_equipes(liste_matchs):

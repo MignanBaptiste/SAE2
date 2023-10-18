@@ -99,7 +99,7 @@ def test_victoire_a_domicile():
 
 def test_nb_buts_marques():
     # TESTS A COMPLETER
-    ...
+    raise
 
 def test_matchs_ville():
     assert histoire2foot.matchs_ville(liste1,'Reims') == [('1970-04-28', 'France', 'Romania', 2, 0, 'Friendly', 'Reims', 'France', False)]
@@ -115,11 +115,11 @@ def test_nombre_moyen_buts():
 
 def test_resultats_equipe():
     # TESTS A COMPLETER
-    ...
+    raise
 
 def test_plus_gros_scores():
     # TESTS A COMPLETER
-    ...
+    raise
 
 def test_liste_des_equipes():
     res=histoire2foot.liste_des_equipes(liste1)
@@ -131,15 +131,15 @@ def test_liste_des_equipes():
 
 def test_premiere_victoire():
     # TESTS A COMPLETER
-    ...
+    raise
     
 def test_nb_matchs_sans_defaites():
     # TESTS A COMPLETER
-    ...
+    raise
 
 def test_est_bien_trie():
     # TESTS A COMPLETER
-    ...
+    raise
 
 def test_fusionner_matchs():
     liste_fus = [('1901-03-09', 'England', 'Northern Ireland', 3, 0, 'British Championship', 'Southampton', 'England', False), 
@@ -169,6 +169,6 @@ def test_fusionner_matchs():
 
 def test_sauver_charger_matchs():
     # A COMPLETER
-    ...
+    raise
 
 # ajouter les tests manquants
