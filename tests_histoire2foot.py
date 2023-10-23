@@ -98,8 +98,9 @@ def test_victoire_a_domicile():
     assert not histoire2foot.victoire_a_domicile(match3)
 
 def test_nb_buts_marques():
-    # TESTS A COMPLETER
-    raise
+    assert histoire2foot.nb_buts_marques(match1) == 6
+    assert histoire2foot.nb_buts_marques(match2) == 3
+    assert histoire2foot.nb_buts_marques(match3) == 1
 
 def test_matchs_ville():
     assert histoire2foot.matchs_ville(liste1,'Reims') == [('1970-04-28', 'France', 'Romania', 2, 0, 'Friendly', 'Reims', 'France', False)]
@@ -114,12 +115,17 @@ def test_nombre_moyen_buts():
     assert histoire2foot.nombre_moyen_buts(liste3,'Friendly') == 3.0
 
 def test_resultats_equipe():
-    # TESTS A COMPLETER
-    raise
+    assert histoire2foot.resultats_equipe(liste1, "France") == (3, 1, 0)
+    assert histoire2foot.resultats_equipe(liste2, "France") == (0, 0, 0)
+    assert histoire2foot.resultats_equipe(liste3, "France") == (3, 0, 0)
+    assert histoire2foot.resultats_equipe(liste4, "France") == (1, 0, 2)
 
 def test_plus_gros_scores():
-    # TESTS A COMPLETER
-    raise
+    assert histoire2foot.plus_gros_scores(liste1) == [('1970-09-05', 'France', 'Czechoslovakia', 3, 0, 'Friendly', 'Nice', 'France', False)]
+    assert histoire2foot.plus_gros_scores(liste2) == [('1901-03-18', 'England', 'Wales', 6, 0, 'British Championship', 'Newcastle', 'England', False)]
+    assert histoire2foot.plus_gros_scores(liste3) == [('1903-04-04', 'Brazil', 'Argentina', 3, 0, 'Friendly', 'Sao Paulo', 'Brazil', False), ('1970-09-05', 'France', 'Czechoslovakia', 3, 0, 'Friendly', 'Nice', 'France', False)]
+    assert histoire2foot.plus_gros_scores(liste4) == [('1978-06-06', 'Germany', 'Mexico', 6, 0, 'FIFA World Cup', 'Córdoba', 'Argentina', True), ('1978-06-21', 'Argentina', 'Peru', 6, 0, 'FIFA World Cup', 'Rosario', 'Argentina', False)]
+
 
 def test_liste_des_equipes():
     res=histoire2foot.liste_des_equipes(liste1)
@@ -130,16 +136,22 @@ def test_liste_des_equipes():
     assert res == ['England', 'Northern Ireland','Scotland', 'Wales']
 
 def test_premiere_victoire():
-    # TESTS A COMPLETER
-    raise
-    
+    assert histoire2foot.premiere_victoire(liste1, "France") == '1970-04-28'
+    assert histoire2foot.premiere_victoire(liste2, "France") is None
+    assert histoire2foot.premiere_victoire(liste3, "France") == '1901-03-30'
+    assert histoire2foot.premiere_victoire(liste4, "France") == '1978-06-10'
+
 def test_nb_matchs_sans_defaites():
-    # TESTS A COMPLETER
-    raise
+    assert histoire2foot.nb_matchs_sans_defaites(liste1, "France") == 4
+    assert histoire2foot.nb_matchs_sans_defaites(liste2, "France") == 0
+    assert histoire2foot.nb_matchs_sans_defaites(liste3, "France") == 3
+    assert histoire2foot.nb_matchs_sans_defaites(liste4, "France") == 1
 
 def test_est_bien_trie():
-    # TESTS A COMPLETER
-    raise
+    assert histoire2foot.est_bien_trie(liste1)
+    assert histoire2foot.est_bien_trie(liste2)
+    assert histoire2foot.est_bien_trie(liste3)
+    assert histoire2foot.est_bien_trie(liste4)
 
 def test_fusionner_matchs():
     liste_fus = [('1901-03-09', 'England', 'Northern Ireland', 3, 0, 'British Championship', 'Southampton', 'England', False), 
@@ -166,6 +178,47 @@ def test_fusionner_matchs():
     assert histoire2foot.fusionner_matchs(liste1,liste2) == liste2 + liste1
     assert histoire2foot.fusionner_matchs([],liste3) == liste3
     assert histoire2foot.fusionner_matchs(liste2,liste3) == liste_fus
+
+liste_fus = [('1901-03-09', 'England', 'Northern Ireland', 3, 0, 'British Championship', 'Southampton', 'England', False), 
+        ('1901-03-18', 'England', 'Wales', 6, 0, 'British Championship', 'Newcastle', 'England', False), 
+        ('1901-03-30', 'Belgium', 'France', 1, 2, 'Friendly', 'Bruxelles', 'Belgium', False),
+        ('1901-03-30', 'England', 'Scotland', 2, 2, 'British Championship', 'London', 'England', False), 
+        ('1902-05-03', 'England', 'Scotland', 2, 2, 'British Championship', 'Birmingham', 'England', False), 
+        ('1903-02-14', 'England', 'Northern Ireland', 4, 0, 'British Championship', 'Wolverhampton', 'England', False), 
+        ('1903-03-02', 'England', 'Wales', 2, 1, 'British Championship', 'Portsmouth', 'England', False), 
+        ('1903-04-04', 'Brazil', 'Argentina', 3, 0, 'Friendly', 'Sao Paulo', 'Brazil', False),
+        ('1903-04-04', 'England', 'Scotland', 1, 2, 'British Championship', 'Sheffield', 'England', False), 
+        ('1905-02-25', 'England', 'Northern Ireland', 1, 1, 'British Championship', 'Middlesbrough', 'England', False), 
+        ('1905-03-27', 'England', 'Wales', 3, 1, 'British Championship', 'Liverpool', 'England', False), 
+        ('1905-04-01', 'England', 'Scotland', 1, 0, 'British Championship', 'London', 'England', False), 
+        ('1907-02-16', 'England', 'Northern Ireland', 1, 0, 'British Championship', 'Liverpool', 'England', False), 
+        ('1907-03-18', 'England', 'Wales', 1, 1, 'British Championship', 'London', 'England', False), 
+        ('1907-04-06', 'England', 'Scotland', 1, 1, 'British Championship', 'Newcastle', 'England', False), 
+        ('1909-02-13', 'England', 'Northern Ireland', 4, 0, 'British Championship', 'Bradford', 'England', False), 
+        ('1909-03-15', 'England', 'Wales', 2, 0, 'British Championship', 'Nottingham', 'England', False), 
+        ('1909-04-03', 'England', 'Scotland', 2, 0, 'British Championship', 'London', 'England', False),
+        ('1970-09-05', 'France', 'Czechoslovakia', 3, 0, 'Friendly', 'Nice', 'France', False), 
+        ('1970-11-11', 'France', 'Norway', 3, 1, 'UEFA Euro qualification', 'Lyon', 'France', False)
+        ]
+test = [('1901-03-09', 'England', 'Northern Ireland', 3, 0, 'British Championship', 'Southampton', 'England', False), 
+('1901-03-18', 'England', 'Wales', 6, 0, 'British Championship', 'Newcastle', 'England', False), 
+('1901-03-30', 'England', 'Scotland', 2, 2, 'British Championship', 'London', 'England', False), 
+('1902-05-03', 'England', 'Scotland', 2, 2, 'British Championship', 'Birmingham', 'England', False), 
+('1903-02-14', 'England', 'Northern Ireland', 4, 0, 'British Championship', 'Wolverhampton', 'England', False), 
+('1903-03-02', 'England', 'Wales', 2, 1, 'British Championship', 'Portsmouth', 'England', False), 
+('1903-04-04', 'England', 'Scotland', 1, 2, 'British Championship', 'Sheffield', 'England', False), 
+('1905-02-25', 'England', 'Northern Ireland', 1, 1, 'British Championship', 'Middlesbrough', 'England', False), 
+('1905-03-27', 'England', 'Wales', 3, 1, 'British Championship', 'Liverpool', 'England', False), 
+('1905-04-01', 'England', 'Scotland', 1, 0, 'British Championship', 'London', 'England', False), 
+('1907-02-16', 'England', 'Northern Ireland', 1, 0, 'British Championship', 'Liverpool', 'England', False), 
+('1907-03-18', 'England', 'Wales', 1, 1, 'British Championship', 'London', 'England', False), 
+('1907-04-06', 'England', 'Scotland', 1, 1, 'British Championship', 'Newcastle', 'England', False), 
+('1909-02-13', 'England', 'Northern Ireland', 4, 0, 'British Championship', 'Bradford', 'England', False), 
+('1909-03-15', 'England', 'Wales', 2, 0, 'British Championship', 'Nottingham', 'England', False), 
+('1909-04-03', 'England', 'Scotland', 2, 0, 'British Championship', 'London', 'England', False), 
+('1970-09-05', 'France', 'Czechoslovakia', 3, 0, 'Friendly', 'Nice', 'France', False), 
+('1970-11-11', 'France', 'Norway', 3, 1, 'UEFA Euro qualification', 'Lyon', 'France', False)]
+print(histoire2foot.fusionner_matchs(liste2,liste3))
 
 def test_sauver_charger_matchs():
     # A COMPLETER
