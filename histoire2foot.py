@@ -244,6 +244,48 @@ def est_bien_trie(liste_matchs):
     return False
 
 
+def res_compare(match1, match2):
+    resultat = (match1, match2)
+    if match1 != match2:
+        if match1[0] < match2[0]:
+            resultat = match1
+        elif match1[0] > match2[0]:
+            resultat = match2
+        elif match1[1] < match2[1]:
+            resultat = match1
+        elif match1[1] > match2[1]:
+            resultat = match2
+        elif match1[2] < match2[2]:
+            resultat = match1
+        elif match1[2] > match2[2]:
+            resultat = match2
+        elif match1[3] < match2[3]:
+            resultat = match1
+        elif match1[3] > match2[3]:
+            resultat = match2
+        elif match1[4] < match2[4]:
+            resultat = match1
+        elif match1[4] > match2[4]:
+            resultat = match2
+        elif match1[5] < match2[5]:
+            resultat = match1
+        elif match1[5] > match2[5]:
+            resultat = match2
+        elif match1[6] < match2[6]:
+            resultat = match1
+        elif match1[6] > match2[6]:
+            resultat = match2
+        elif match1[7] < match2[7]:
+            resultat = match1
+        elif match1[7] > match2[7]:
+            resultat = match2
+        elif match1[8] < match2[8]:
+            resultat = match1
+        else:
+            resultat = match2
+    return resultat
+
+
 def fusionner_matchs(liste_matchs1, liste_matchs2):
     """Fusionne deux listes de matchs triées sans doublons en une liste triée sans doublon
     sachant qu'un même match peut être présent dans les deux listes
@@ -259,11 +301,14 @@ def fusionner_matchs(liste_matchs1, liste_matchs2):
     indice2 = 0
     liste_matchs = []
     while indice1 < len(liste_matchs1) and indice2 < len(liste_matchs2):  # Parcours les deux listes tant qu'une des deux listes n'est pas entièrement parcouru
-        if liste_matchs1[indice1][0] == liste_matchs2[indice2][0]:  # Permet de savoir si les deux matchs sont identiques
-            liste_matchs.append(liste_matchs1[indice1])  # Dans ce cas on ajoute la ligne et on incrémente de 1 les deux indides
-            indice1 += 1
-            indice2 += 2
-        elif liste_matchs1[indice1][0] < liste_matchs2[indice2][0]:  # Si le match de la liste 1 c'est dérouler avant le match de la liste 2
+        match1 = liste_matchs1[indice1]
+        match2 = liste_matchs2[indice2]
+        test = res_compare(match1, match2)
+        if test == (match1, match2):
+                liste_matchs.append(match1)  # Dans ce cas on ajoute la ligne et on incrémente de 1 les deux indides
+                indice1 += 1
+                indice2 += 1
+        elif test == liste_matchs1[indice1]:  # Si le match de la liste 1 c'est dérouler avant le match de la liste 2
             liste_matchs.append(liste_matchs1[indice1])
             indice1 += 1
         else:
@@ -415,8 +460,6 @@ def nb_matchs_sans_defaites(liste_matchs, equipe):
     return best_victory_streak
 
 
-
-
 def charger_matchs(nom_fichier):
     """charge un fichier de matchs donné au format CSV en une liste de matchs
 
@@ -434,7 +477,7 @@ def charger_matchs(nom_fichier):
         champ[8] = champ[8] == "True"
         match = (champ[0], champ[1], champ[2], int(champ[3]), int(champ[4]), champ[5], champ[6], champ[7], champ[8])
         liste_matchs.append(match)
-    fic.close()
+    fichier.close()
     return liste_matchs
 
 
