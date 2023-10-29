@@ -3,6 +3,14 @@ import histoire2foot
 # Ici vos fonctions dédiées aux interactions
 
 def info_equipe(liste_equipes):
+    """Récupère des informations sur ce que veux savoir l'utilisateur sur une équipe
+
+    Args:
+        liste_equipes (list): liste des équipes présentent dans le(s) fichier(s) exploité(s)
+
+    Returns:
+        tuple: contient le nom d'une équipe dont l'utilisateur veut connaître des informations et son choix sur quel information il veut recevoir
+    """    
     boucle = True
     equipe = ""
     while boucle:
@@ -31,6 +39,11 @@ def info_equipe(liste_equipes):
 
 
 def info_competition():
+    """Récupère des informations sur ce que veux savoir l'utilisateur sur une compétition
+
+    Returns:
+        str: le nom de l'équipe dont l'utilisateur veut connaître les informations
+    """    
     print("Que voulez vous savoir ?")
     print("Donner le nom d'une compétition de football dont vous voulez les informations")
     print("0 - Revenir en arrière")
@@ -42,6 +55,11 @@ def info_competition():
 
 
 def info_matchs():
+    """Récupère des informations sur ce que veux savoir l'utilisateur sur un ou plusieurs matchs de la liste de matchs
+
+    Returns:
+        tuple: choix qui est l'information que veut l'utilisateur et ville qui est la ville à exploiter si nécessaire en fonction du choix de l'utilisateur
+    """    
     boucle = True
     choix = ""
     ville = ""
@@ -66,6 +84,13 @@ def info_matchs():
 
 
 def affichage_equipe(liste_matchs, equipe, choix):
+    """Gère l'affichage en fonction des choix de l'utilisateur concernant les questions sur une équipe
+
+    Args:
+        liste_matchs (list): liste de matchs
+        equipe (str): le nom de pays de l'équipe à exploiter
+        choix (str): le choix en numéro de l'utilisateur utilisé pour savoir quoi afficher
+    """    
     if choix == "1":
         date = histoire2foot.premiere_victoire(liste_matchs, equipe)
         if date is None:
@@ -81,6 +106,12 @@ def affichage_equipe(liste_matchs, equipe, choix):
 
 
 def affichage_competition(liste_matchs, competition):
+    """Gère l'affichage en fonction des choix de l'utilisateur concernant la question sur une compétition
+
+    Args:
+        liste_matchs (list): liste de matchs
+        competition (str): le nom d'une compétition
+    """    
     buts_moyens = histoire2foot.nombre_moyen_buts(liste_matchs, competition)
     if buts_moyens == 0:
         print("Soit la compétition est mal orthographié, soit elle n'éxiste pas, soit elle ne compte aucun buts marqués")
@@ -89,6 +120,13 @@ def affichage_competition(liste_matchs, competition):
 
 
 def affichage_matchs(liste_matchs, choix, ville):
+    """Gère l'affichage en fonction des choix de l'utilisateur concernant les questions sur les matchs en général
+
+    Args:
+        liste_matchs (list): liste de matchs
+        choix (str): le choix de question de l'utilisateur
+        ville (str): la ville dont veux connaître les informations si elle est utile dans la question de l'utilisateur
+    """    
     if choix == "1":
         liste_ville = histoire2foot.matchs_ville(liste_matchs, ville)
         if liste_ville == []:
@@ -112,6 +150,9 @@ def affichage_matchs(liste_matchs, choix, ville):
 
 # ici votre programme principal
 def programme_principal():
+    """Programme principal qui gère les demandes de l'utilisateur, programme par lequel toute les requêtes passent pour satisfaire les demandes de l'utilisateur
+    Est utilisé pour charger et sauvegarder les fichiers utilisés.
+    """    
     barre = "".ljust(42, "#")
     vide = "#".ljust(40) + "#"
     print(barre)
@@ -122,6 +163,7 @@ def programme_principal():
      #  Partie chargement d'un fichier csv
     print("Avez vous un fichier csv que vous voulez exploiter en parliculier ? Si non, une liste de matchs par défaut sera utilisée (cela peut prendre un certains temps)")
     particu_csv = ""
+    nom_csv = ""
     while particu_csv.upper() not in ["Y", "N"]:
         particu_csv = input("Y/N : ")
     if particu_csv.upper() == "Y":
@@ -184,6 +226,10 @@ def programme_principal():
                 saisie = ""
             else:
                 saisie = "0"
+    if nom_csv == "":
+        histoire2foot.sauver_matchs(liste_matchs, "new_histoire.csv")
+    else:
+        histoire2foot.sauver_matchs(liste_matchs, nom_csv)
     print("Merci d'avoir utiliser mon programme, en espérant qu'il vous ait plut et à bientôt")
 
 

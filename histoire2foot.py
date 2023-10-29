@@ -108,7 +108,7 @@ def match_correct(match):
          #  Test si la date respecte le format de la date comme il doit être enregistrer
         date = match[0]
         if not (date[4] == "-" and date[7] == "-"):
-            if not  (date[0:3] in "0123456789" and date[5:6] in "0123456789" and date[8:9] in "0123456789"):
+            if not (date[0:3] in "0123456789" and date[5:6] in "0123456789" and date[8:9] in "0123456789"):
                 return False
          #  Test si l'occurence est correcte, si le match se passe réelement en terrain neutre
         if match[8]:
