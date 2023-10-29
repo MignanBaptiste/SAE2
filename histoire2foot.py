@@ -210,7 +210,7 @@ def nombre_moyen_buts(liste_matchs, nom_competition):
     total_buts = 0
     moyenne = 0
     for match in liste_matchs:
-        if match[5] == nom_competition:
+        if match[5].lower() == nom_competition.lower():
             nb_competition += 1
             total_buts += nb_buts_marques(match)
     if nb_competition != 0:
