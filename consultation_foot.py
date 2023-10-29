@@ -2,7 +2,7 @@ import histoire2foot
 
 # Ici vos fonctions dédiées aux interactions
 
-def info_equipe(liste_equipes): #  Partie à régler les bugs
+def info_equipe(liste_equipes):
     boucle = True
     equipe = ""
     while boucle:
@@ -20,9 +20,9 @@ def info_equipe(liste_equipes): #  Partie à régler les bugs
             if choix in ["0", "1", "2", "3"]: 
                 boucle = False
             else:
-                print("Veuillez donner un des choix qui vous est proposé")
+                print("!!! Veuillez indiquer un des choix qui vous est proposé !!!")
         else:
-            print("Je ne connais pas cette équipe, veuillez indiquez le nom d'une autre équipe qui éxiste")
+            print("!!! Je ne connais pas cette équipe, veuillez indiquez le nom d'une autre équipe qui éxiste !!!")
             equipe = ""
     if choix == "0":
         return None
@@ -61,12 +61,11 @@ def info_matchs():
                 boucle = False
             else:
                 choix = ""
-                print("Veuillez donner un des choix qui vous est proposé")
+                print("!!! Veuillez indiquer un des choix qui vous est proposé !!!")
     return (choix, ville)
 
 
 def affichage_equipe(liste_matchs, equipe, choix):
-    print(choix, type(choix))
     if choix == "1":
         date = histoire2foot.premiere_victoire(liste_matchs, equipe)
         if date is None:
@@ -75,16 +74,16 @@ def affichage_equipe(liste_matchs, equipe, choix):
             print("L'équipe", equipe, "a gagné son premier match le", date)
     elif choix == "2":
         compte = histoire2foot.nb_matchs_sans_defaites(liste_matchs, equipe)
-        print("Le plus grand nombre de victoire sans défaites de l'équipe", equipe, "est de", compte, "matchs")
+        print("Le plus grand nombre de victoire sans défaites de l'équipe", equipe, "est de", compte, "matchs sans défaites")
     else:
         resultats = histoire2foot.resultats_equipe(liste_matchs, equipe)
-        print("L'équipe", equipe, "a gagné", resultats[0], ", à fait", resultats[1], "matchs nuls et", resultats[2], "défaites")
+        print("L'équipe", equipe, "a", resultats[0], "victoires, à fait", resultats[1], "matchs nuls et", resultats[2], "défaites")
 
 
 def affichage_competition(liste_matchs, competition):
     buts_moyens = histoire2foot.nombre_moyen_buts(liste_matchs, competition)
     if buts_moyens == 0:
-        print("Soit la compétition n'éxiste pas, soit elle ne compte aucun buts marqués")
+        print("Soit la compétition est mal orthographié, soit elle n'éxiste pas, soit elle ne compte aucun buts marqués")
     else:
         print("En moyenne, il y a", buts_moyens, "buts marqués par matchs dans la compétition", competition)
 
@@ -93,7 +92,7 @@ def affichage_matchs(liste_matchs, choix, ville):
     if choix == "1":
         liste_ville = histoire2foot.matchs_ville(liste_matchs, ville)
         if liste_ville == []:
-            print("Il n'y a aucun match qui ne se sont déroulé dans la ville de", ville)
+            print("Il n'y a aucun match qui ne s'est déroulé dans la ville de", ville)
         else:
             print("Les matchs s'étant déroulé à", ville, "sont : ")
             for match in liste_ville:
@@ -102,33 +101,33 @@ def affichage_matchs(liste_matchs, choix, ville):
     else:
         match_spect = histoire2foot.matchs_spectaculaires(liste_matchs)
         if len(match_spect) == 1:
+            match = match_spect[0]
             print("Le match le plus spectaculaire est celui s'étant dérouler à", match[6], "en", match[7], 
-              "avec un score de", match[3], "pour", match[1], "et de", match[2], "pour", match[4])
+              "avec un score de", match[3], "pour", match[1], "et de", match[4], "pour", match[2])
         else:
             for match in match_spect:
                 print("L'un des matchs les plus spectaculaires est celui s'étant dérouler à", match[6], "en", match[7], 
-              "avec un score de", match[3], "pour", match[1], "et de", match[2], "pour", match[4])
+              "avec un score de", match[3], "pour", match[1], "et de", match[4], "pour", match[2])
 
 
 # ici votre programme principal
 def programme_principal():
     barre = "".ljust(42, "#")
-    vide = "#" + "".ljust(40) + "#"
+    vide = "#".ljust(40) + "#"
     print(barre)
     print(vide)
     print("# Bienvenue en quoi puis-je vous aider ? #")
     print(vide)
     print(barre, "\n")
      #  Partie chargement d'un fichier csv
-    print("Avez vous un fichier csv que vous voulez exploiter en parliculier ? Si non, une liste de matchs par défaut sera utilisée")
+    print("Avez vous un fichier csv que vous voulez exploiter en parliculier ? Si non, une liste de matchs par défaut sera utilisée (cela peut prendre un certains temps)")
     particu_csv = ""
-    while particu_csv not in ["Y", "N"]:
+    while particu_csv.upper() not in ["Y", "N"]:
         particu_csv = input("Y/N : ")
-    if particu_csv == "Y":
+    if particu_csv.upper() == "Y":
         boucle = True
         while boucle:
             nom_csv = input("Donner le nom de votre fichier csv (avec extension) soit 0 si vous avez changé d'avis: ")
-            print(nom_csv, nom_csv == "0")
             if nom_csv == "0":
                 particu_csv = "N"
                 boucle = False
@@ -141,7 +140,7 @@ def programme_principal():
                         print("Votre fichier a un problème, soit les matchs ne respectent pas le format nécessaire pour être utiliser, soit ils ne sont pas triés dans un ordre croissant celon leur date")
                 except:
                     print("Veuillez donner le nom d'un fichier csv qui existe sans oublier l'extension")
-    if particu_csv == "N":
+    if particu_csv.upper() == "N":
         liste1 = histoire2foot.charger_matchs("histoire1.csv")
         liste2 = histoire2foot.charger_matchs("histoire2.csv")
         liste3 = histoire2foot.charger_matchs("histoire3.csv")
@@ -152,7 +151,7 @@ def programme_principal():
     saisie = ""
     while boucle:
         if saisie == "":
-            print(vide + "\n" + barre + "\n" + vide)
+            print(vide.strip("#") + "\n" + barre + "\n" + vide.strip("#"))
             print( "MENU", "\n", "Quelles types d'information voulez vous avoir ?")
             print("0 - Met fin au processus")
             print("1 - Informations en rapport avec un équipe")
@@ -165,7 +164,7 @@ def programme_principal():
             liste_equipe = histoire2foot.liste_equipes(liste_matchs)
             resultats = info_equipe(liste_equipe)
             if resultats is not None:
-                affichage_equipe(liste_matchs, resultats[1], resultats[0])
+                affichage_equipe(liste_matchs, resultats[0], resultats[1])
         elif saisie == "2":
             resultats = info_competition()
             if resultats is not None:
@@ -176,7 +175,15 @@ def programme_principal():
             ville = resultats[1]
             if choix is not None:
                 affichage_matchs(liste_matchs, choix, ville)
-        saisie = ""
+        else:
+            print("!!! Veuillez indiquer un des choix qui vous est proposé !!!")
+        if saisie != "0":
+            print("Voulez vous continuer a utilisé ce programme ?")
+            continuer = input("Y/N : ")
+            if continuer.upper() == "Y":
+                saisie = ""
+            else:
+                saisie = "0"
     print("Merci d'avoir utiliser mon programme, en espérant qu'il vous ait plut et à bientôt")
 
 
